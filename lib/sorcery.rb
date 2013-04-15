@@ -14,6 +14,7 @@ module Sorcery
       autoload :ActivityLogging, 'sorcery/model/submodules/activity_logging'
       autoload :BruteForceProtection, 'sorcery/model/submodules/brute_force_protection'
       autoload :External, 'sorcery/model/submodules/external'
+      autoload :TwoFactor, 'sorcery/model/submodules/two_factor'
     end
   end
   autoload :Controller, 'sorcery/controller'
@@ -24,6 +25,7 @@ module Sorcery
       autoload :BruteForceProtection, 'sorcery/controller/submodules/brute_force_protection'
       autoload :HttpBasicAuth, 'sorcery/controller/submodules/http_basic_auth'
       autoload :ActivityLogging, 'sorcery/controller/submodules/activity_logging'
+      autoload :TwoFactor, 'sorcery/controller/submodules/two_factor'
       autoload :External, 'sorcery/controller/submodules/external'
       module External
         module Protocols

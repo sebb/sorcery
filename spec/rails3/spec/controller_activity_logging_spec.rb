@@ -4,14 +4,14 @@ describe ApplicationController do
   before(:all) do
     ActiveRecord::Migrator.migrate("#{Rails.root}/db/migrate/activity_logging")
   end
-  
+
   after(:all) do
     ActiveRecord::Migrator.rollback("#{Rails.root}/db/migrate/activity_logging")
     sorcery_controller_property_set(:register_login_time, true)
     sorcery_controller_property_set(:register_logout_time, true)
     sorcery_controller_property_set(:register_last_activity_time, true)
   end
-  
+
   # ----------------- ACTIVITY LOGGING -----------------------
   describe ApplicationController, "with activity logging features" do
     before(:all) do
@@ -25,7 +25,11 @@ describe ApplicationController do
     after(:each) do
       User.delete_all
     end
-    
+
+    after(:all) do
+      sorcery_reload!
+    end
+
     specify { subject.should respond_to(:current_users) }
 
     it "'current_users' should be empty when no users are logged in" do
@@ -63,7 +67,7 @@ describe ApplicationController do
       get :some_action_making_a_non_persisted_change_to_the_user
       User.first.username.should == original_user_name
     end
-    
+
     it "'current_users' should hold the user object when 1 user is logged in" do
       login_user
       get :some_action
@@ -88,14 +92,14 @@ describe ApplicationController do
       subject.current_users[1].should == user2
       subject.current_users[2].should == user3
     end
-    
+
     it "should not register login time if configured so" do
       sorcery_controller_property_set(:register_login_time, false)
       now = Time.now.in_time_zone
       login_user
       @user.last_login_at.should be_nil
     end
-    
+
     it "should not register logout time if configured so" do
       sorcery_controller_property_set(:register_logout_time, false)
       now = Time.now.in_time_zone
@@ -103,7 +107,7 @@ describe ApplicationController do
       logout_user
       @user.last_logout_at.should be_nil
     end
-    
+
     it "should not register last activity time if configured so" do
       sorcery_controller_property_set(:register_last_activity_time, false)
       now = Time.now.in_time_zone

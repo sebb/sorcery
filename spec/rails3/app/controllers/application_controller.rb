@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   #before_filter :validate_session, :only => [:test_should_be_logged_in] if defined?(:validate_session)
   before_filter :require_login_from_http_basic, :only => [:test_http_basic_auth]
-  before_filter :require_login, :only => [:test_logout, :test_should_be_logged_in, :some_action]
+  before_filter :require_login, :only => [:test_logout, :test_should_be_logged_in, :some_action, :test_logout_on_trusted_device]
 
   def index
   end
@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     current_user.username = "to_be_ignored"
     render :nothing => true
   end
-  
+
   def test_login
     @user = login(params[:username], params[:password])
     render :text => ""
@@ -186,7 +186,7 @@ class ApplicationController < ActionController::Base
       redirect_to "blu", :alert => "Failed!"
     end
   end
-  
+
   def test_create_from_provider_with_block
     provider = params[:provider]
     login_from(provider)
@@ -194,15 +194,35 @@ class ApplicationController < ActionController::Base
       # check uniqueness of username
       User.where(:username => user.username).empty?
     end
-    if @user 
+    if @user
       redirect_to "bla", :notice => "Success!"
     else
       redirect_to "blu", :alert => "Failed!"
     end
   end
 
-  protected
+  def test_login_with_two_factor
+    @user = login_with_two_factor(login: params[:username],
+                                  password: params[:password],
+                                  one_time_password: params[:one_time_password])
+    render :text => ""
+  end
 
+  def test_login_with_trust_device
+    @user = login_with_two_factor(login:             params[:username],
+                                  password:          params[:password],
+                                  one_time_password: params[:one_time_password])
+    trust_this_device!
+    render :text => ""
+  end
+
+  def test_logout_on_trusted_device
+    trust_this_device!
+    logout
+    render :text => ""
+  end
+
+  protected
 
 
 end

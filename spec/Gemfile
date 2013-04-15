@@ -5,6 +5,7 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 gem "sorcery", '>= 0.1.0', :path => '../'
 gem 'oauth', "~> 0.4.4"
 gem 'oauth2', "~> 0.8.0"
+gem 'rotp'
 group :development do
   gem "rspec", "~> 2.5.0"
   gem 'ruby-debug19'

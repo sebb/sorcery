@@ -429,6 +429,19 @@ Rails.application.config.sorcery.configure do |config|
     # Default: `:uid`
     #
     # user.provider_uid_attribute_name =
+
+    # -- two_factor --
+    # the attribute name to keep the secret token for 2 factor auth
+    # Default: `:two_factor_secret`
+    #
+    # user.two_factor_secret_attribute_name =
+
+
+    # Grace period (or drift) allowed for one time password in seconds.
+    # false means drift is not allowed
+    # Default: false
+    #
+    # user.two_factor_allowed_drift =
   end
 
   # This line must come after the 'user config' block.
